@@ -1,0 +1,163 @@
+from tkinter import *
+from tkinter import filedialog
+from PIL import Image, ImageTk
+from tkinter import colorchooser
+
+class SteganGUI:
+    def __init__(self, master):
+        self.root = master
+        self.root.config()
+        self.root.geometry("400x800")
+        self.root.title("A GUI of steganography")
+
+        digitalwatermark(self.root)
+
+
+class digitalwatermark:
+    def __init__(self, master):
+        self.root = master
+        self.root.config()
+        self.water_mark = Frame(self.root)
+        self.water_mark.grid()
+
+
+        #Browse file
+        def fileDialog():
+            filename = StringVar()
+            filename.set(filedialog.askopenfilename(initialdir="/", title="Select file",
+                                                    filetypes=(
+                                                        ("bmp, png files", "*.bmp *.png"),
+                                                        ("all file", " *.* ")
+                                                    )))
+            self.file_name = Entry(self.water_mark, textvariable=filename, width=40)
+            self.file_name.grid(row=0)
+
+        # Browse file for X, Y
+        def fileDialog_XY():
+            File = filedialog.askopenfilename(initialdir="/", title="Select file",
+                                                    filetypes=(
+                                                        ("bmp, png files", "*.bmp *.png"),
+                                                        ("all file", " *.* ")
+                                                    ))
+            self.original = Image.open(File)
+            self.original = self.original.resize((300, 300))  # resize image
+            self.img = ImageTk.PhotoImage(self.original)
+            self.XY.create_image(0, 0, image=self.img, anchor="nw")  # add係左上
+
+        def getlocation(image):
+            global x0, y0
+            x0 = image.x
+            y0 = image.y
+
+        def colorpicker():
+            global rgb
+            (rgb) = colorchooser.askcolor()
+
+        #OK
+        def print_all():
+            filename = self.file_name.get()
+            embed = self.text_area.get('1.0', END)
+            textType = self.clicked_type.get()
+            textSize = self.clicked_size.get()
+            textBold = self.clicked_bold.get()
+            print(filename)
+            print(embed)
+            print("Type = " + textType)
+            print("Size = " + textSize)
+            print("Bold = " + textBold)
+            print(" X   Y")
+            print(x0, y0)
+            print('R, G, B = ' + str(rgb))
+
+        #Show address
+        self.file_name = Entry(self.water_mark, width=40)
+        self.file_name.grid(row=0)
+
+        self.browse_button = Button(self.water_mark, text="Browse", command=fileDialog)
+        self.browse_button.grid(row=0, column=1)
+
+        #textarea
+        self.text_area = Text(self.water_mark, height=10, width=40)
+        self.scroll = Scrollbar(self.water_mark, command=self.text_area.yview)
+
+        self.text_area.configure(yscrollcommand=self.scroll.set)
+
+        self.text_area.grid(row=1, column=0, columnspan=2, sticky="nsew")
+        self.scroll.grid(row=1, column=1, sticky="nse")
+
+        #drop down box (TextType)
+        options_type = [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+        ]
+        self.clicked_type = StringVar()
+        self.clicked_type.set(options_type[0])
+        self.drop_type = OptionMenu(self.water_mark, self.clicked_type, *options_type)
+        self.drop_type.grid(row=2)
+
+        #drop down box (TextSize)
+        options_size = [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+        ]
+        self.clicked_size = StringVar()
+        self.clicked_size.set(options_size[0])
+        self.drop_size = OptionMenu(self.water_mark, self.clicked_size, *options_size)
+        self.drop_size.grid(row=3)
+
+        #drop down box (TextBold)
+        options_bold = [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+        ]
+        self.clicked_bold = StringVar()
+        self.clicked_bold.set(options_bold[0])
+        self.drop_bold = OptionMenu(self.water_mark, self.clicked_bold, *options_bold)
+        self.drop_bold.grid(row=4)
+
+        #Determin the X, Y by clicking
+        #setting up a tkinter window
+        self.XY = Canvas(self.water_mark, width=300, height=300, bg = 'white')
+        self.XY.grid(row=5, column=0)
+
+        self.browse_button_XY = Button(self.water_mark, text="Browse", command=fileDialog_XY)
+        self.browse_button_XY.grid(row=5, column=1, sticky=W)
+
+        #MouseClick event
+        self.XY.bind("<Button 1>", getlocation)
+
+        #ColorPicker
+        self.color_button = Button(self.water_mark, text="Picker a Color", command=colorpicker)
+        self.color_button.grid(row=6, column=0)
+
+        #Print all data button
+        self.ok_button = Button(self.water_mark, text="OK", command=print_all)
+        self.ok_button.grid(sticky=S)
+
+root = Tk()
+SteganGUI(root)
+root.mainloop()
