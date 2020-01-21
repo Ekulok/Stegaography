@@ -148,7 +148,7 @@ class digitalwatermark:
 
         # Determin the X, Y by clicking
         # setting up a tkinter window
-        self.XY = Canvas(self.water_mark, width=500, height=500, bg='white')
+        self.XY = Canvas(self.water_mark, width=500, height=500, bg='grey')
         self.XY.grid(row=0, column=0, rowspan=6, padx=15, pady=15)
 
         # MouseClick event
