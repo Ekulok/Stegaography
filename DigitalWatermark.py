@@ -126,9 +126,9 @@ class digitalwatermark:
         self.drop_size = OptionMenu(self.water_mark, self.clicked_size, *options_size)
         self.drop_size.grid(row=3, column=2, padx=5, pady=5, sticky=W)
 
-        # drop down box (TextBold)
-        self.bold_label = Label(self.water_mark, text="Text Bold")
-        self.bold_label.grid(row=4, column=2, padx=5, pady=5, sticky=NW)
+        # drop down box (Text Weight)
+        self.weight_label = Label(self.water_mark, text="Text Weight")
+        self.weight_label.grid(row=4, column=2, padx=5, pady=5, sticky=NW)
         options_bold = [
             "1",
             "2",
